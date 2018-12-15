@@ -5,41 +5,41 @@ import scala.collection.{immutable => imm, mutable}
 object HorizontalTests extends TestSuite{
   val Check = new Check(9999)
   val tests = TestSuite{
-    'Horizontal {
+    "Horizontal" - {
 
-      'primitives {
-        'Unit {
+      "primitives" - {
+        "Unit" - {
           * - Check((), "()", "undefined")
         }
-        'Char {
+        "Char" - {
           * - Check('\n', "'\\n'")
           * - Check('a', "'a'")
         }
-        'Byte {
+        "Byte" - {
           * - Check(123.toByte, "123")
           * - Check(-123.toByte, "-123")
         }
-        'Short {
+        "Short" - {
           * - Check(123.toShort, "123")
           * - Check(-12345.toShort, "-12345")
         }
-        'Int {
+        "Int" - {
           * - Check(123, "123")
           * - Check(-1234567, "-1234567")
         }
-        'Long {
+        "Long" - {
           * - Check(123456789012345L, "123456789012345L")
           * - Check(-123456789012345L, "-123456789012345L")
         }
-        'Float {
+        "Float" - {
           * - Check(0.75F, "0.75F", "0.750000F")
           * - Check(-13.5F, "-13.5F", "-13.500000F")
         }
-        'Double {
+        "Double" - {
           * - Check(0.125, "0.125", "0.125F", "0.125000")
           * - Check(-0.125, "-0.125", "-0.125F", "-0.125000")
         }
-        'String {
+        "String" - {
           val tq = "\"\"\""
           * - Check("i am a cow", """ "i am a cow" """)
           * - Check( """ "hello" """.trim, """ "\"hello\"" """.trim)
@@ -60,57 +60,57 @@ object HorizontalTests extends TestSuite{
             "\"\"\"\n" + "ABCDEFG" * n + "\"\"\""
           )
         }
-        'Symbols {
-          * - Check('hello, """'hello""")
-          * - Check('I_AM_A_COW, """'I_AM_A_COW""")
+        "Symbols" - {
+          * - Check(sym"hello", """'hello""")
+          * - Check(sym"I_AM_A_COW", """'I_AM_A_COW""")
         }
       }
 
-      'misc {
-        'Nothing - intercept[Exception](Check(throw new Exception(), ""))
-        'Null {
+      "misc" - {
+        "Nothing" - intercept[Exception](Check(throw new Exception(), ""))
+        "Null" - {
           Check(null, "null")
           Check(null: String, "null")
           Check(Seq("look!", null: String, "hi"), """List("look!", null, "hi")""")
         }
-        'Either {
+        "Either" - {
           Check(Left(123): Either[Int, Int], "Left(123)")
           Check(Left(123): Left[Int, Int], "Left(123)")
 
           Check(Left(123), "Left(123)")
           Check(Right((1, "2", 3)), """Right((1, "2", 3))""")
         }
-        'Options {
+        "Options" - {
           Check(Some(123), "Some(123)")
           Check(None: Option[Int], "None")
           Check(None: Option[Nothing], "None")
           Check(None, "None")
           Check(Some(None), "Some(None)")
         }
-        'Default{
+        "Default"-{
           val baos = new java.io.ByteArrayOutputStream()
           Check(baos, baos.toString)
 
         }
       }
 
-      'collections {
+      "collections" - {
         // Fallback to toString
-        'Iterator - {
-          Check(Iterator(), "empty iterator")
-          Check(Iterator(1, 2, 3), "non-empty iterator")
-          Check(Option(Iterator(1, 2, 3)), "Some(non-empty iterator)")
+        "Iterator" - {
+          Check(Iterator(), "<iterator>")
+          Check(Iterator(1, 2, 3), "<iterator>")
+          Check(Option(Iterator(1, 2, 3)), "Some(<iterator>)")
         }
 
-        'Iterator - Check(Iterable('1', '2', '3'), "List('1', '2', '3')")
+        "Iterator" - Check(Iterable('1', '2', '3'), "List('1', '2', '3')")
 
-        'Array - Check(Array(1, 2, 3), "Array(1, 2, 3)")
-        'Seq - Check(Seq(1, 2, 3), "List(1, 2, 3)")
-        'List - Check(List("1", "2", "3"), """List("1", "2", "3")""")
-        'Vector - Check(Vector('omg, 'wtf, 'bbq), """Vector('omg, 'wtf, 'bbq)""")
+        "Array" - Check(Array(1, 2, 3), "Array(1, 2, 3)")
+        "Seq" - Check(Seq(1, 2, 3), "List(1, 2, 3)")
+        "List" - Check(List("1", "2", "3"), """List("1", "2", "3")""")
+        "Vector" - Check(Vector(sym"omg", sym"wtf", sym"bbq"), """Vector('omg, 'wtf, 'bbq)""")
 
-        'Buffer - Check(
-          mutable.Buffer('omg, 'wtf, 'bbq),
+        "Buffer" - Check(
+          mutable.Buffer(sym"omg", sym"wtf", sym"bbq"),
           """ArrayBuffer('omg, 'wtf, 'bbq)""",
           """WrappedArray('omg, 'wtf, 'bbq)"""
         )
@@ -118,39 +118,39 @@ object HorizontalTests extends TestSuite{
 
         // Streams are hard-coded to always display vertically, in order
         // to make streaming pretty-printing sane
-        'Stream - Check(
-          Stream('omg, 'wtf, 'bbq),
+        "Stream" - Check(
+          Stream(sym"omg", sym"wtf", sym"bbq"),
           """Stream('omg, 'wtf, 'bbq)"""
         )
-        'Iterable - Check(Iterable('omg, 'wtf, 'bbq), """List('omg, 'wtf, 'bbq)""")
-        'Traversable - Check(Traversable('omg, 'wtf, 'bbq), """List('omg, 'wtf, 'bbq)""")
-        'Set - Check(Set('omg), """Set('omg)""")
-        'mutableSet - Check(mutable.Set('omg), """Set('omg)""")
-        'collectionSet - Check(collection.Set('omg), """Set('omg)""")
-        'SortedSet - Check(
+        "Iterable" - Check(Iterable(sym"omg", sym"wtf", sym"bbq"), """List('omg, 'wtf, 'bbq)""")
+        "Traversable" - Check(Traversable(sym"omg", sym"wtf", sym"bbq"), """List('omg, 'wtf, 'bbq)""")
+        "Set" - Check(Set(sym"omg"), """Set('omg)""")
+        "mutableSet" - Check(mutable.Set(sym"omg"), """Set('omg)""")
+        "collectionSet" - Check(collection.Set(sym"omg"), """Set('omg)""")
+        "SortedSet" - Check(
           imm.SortedSet("1", "2", "3"),
           """TreeSet("1", "2", "3")"""
         )
-        'Map {
+        "Map" - {
           Check(Map("key" -> "value"), """Map("key" -> "value")""")
         }
-        'collectionMap {
+        "collectionMap" - {
           Check(Map("key" -> "value"): collection.Map[String, String], """Map("key" -> "value")""")
         }
 
-        'mutableMap {
+        "mutableMap" - {
           Check(mutable.Map("key" -> "value"), """Map("key" -> "value")""")
         }
 
-        'SortedMap - Check(
+        "SortedMap" - Check(
           imm.SortedMap("key" -> "v", "key2" -> "v2"),
           """Map("key" -> "v", "key2" -> "v2")"""
         )
       }
 
-      'tuples {
+      "tuples" - {
 
-        'normal {
+        "normal" - {
 
           Check(Tuple1("123"), """Tuple1("123")""")
           Check((1, 2, "123"), """(1, 2, "123")""")
@@ -162,7 +162,7 @@ object HorizontalTests extends TestSuite{
             """(1, 2, "123", (100L, 200L), 1.500000F, 0.100000)"""
           )
         }
-        'infix{
+        "infix"-{
           case class ::(x: Any, y: Any)
           Check(::(1, 2), "1 :: 2")
           Check(::(0, ::(1, 2)), "0 :: 1 :: 2")

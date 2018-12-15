@@ -19,14 +19,14 @@ object DerivationTests extends TestSuite{
   val Check = new Check()
 
   val tests = TestSuite{
-    'singletons {
+    "singletons" - {
       import Singletons._
       Check(Standalone, "Standalone")
       Check(BB, "BB")
       Check(CC, "CC")
       Check(CC: AA, "CC")
     }
-    'adts {
+    "adts" - {
       import ADTs._
       Check(
         ADTb(123, "hello world"),
@@ -40,7 +40,7 @@ object DerivationTests extends TestSuite{
 
       Check(ADT0(), "ADT0()")
     }
-    'sealedHierarchies {
+    "sealedHierarchies" - {
       import DeepHierarchy._
       Check(
         AnQ(1),
@@ -59,11 +59,11 @@ object DerivationTests extends TestSuite{
         "F(AnQ(1))"
       )
     }
-    'varargs {
+    "varargs" - {
       import Varargs._
       Check(Sentence("omg", "2", "3"), """Sentence("omg", WrappedArray("2", "3"))""")
     }
-    'genericADTs {
+    "genericADTs" - {
       import GenericADTs._
       Check(DeltaHardcoded.Remove("omg"), """Remove("omg")""")
       Check(
@@ -99,7 +99,7 @@ object DerivationTests extends TestSuite{
     }
 
 
-    'fallback{
+    "fallback" - {
       // make sure we can pprint stuff that looks nothing like a case class
       // by falling back to good old toString
       import Amorphous._
@@ -132,7 +132,7 @@ object DerivationTests extends TestSuite{
       )
 
     }
-    'enums{
+    "enums"-{
       val days1 = pprint.PPrinter.BlackWhite.tokenize(
         java.util.concurrent.TimeUnit.DAYS
       ).mkString
@@ -146,13 +146,13 @@ object DerivationTests extends TestSuite{
         days2 == "SECONDS"
       )
     }
-    'issue92{
+    "issue92"-{
       val r = new Issue92.Rational {
         override def compare(that: Issue92.Rational): Int = ???
       }
       Check(r : Issue92.Rational, r.toString)
     }
-    'test{
+    "test"-{
       Check(
         C2(List(C1("hello", List("world")))),
         """C2(List(C1("hello", List("world"))))"""

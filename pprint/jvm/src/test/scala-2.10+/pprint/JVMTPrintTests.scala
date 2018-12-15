@@ -12,7 +12,7 @@ object JVMTPrintTests extends TestSuite{
     type X = scala.Int with scala.Predef.String{}
     val x = ""
 
-    'infix {
+    "infix" - {
       object X {
         class ++[Int, String]
       }

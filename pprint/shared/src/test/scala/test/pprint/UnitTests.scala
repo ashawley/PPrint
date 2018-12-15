@@ -8,7 +8,7 @@ object UnitTests extends TestSuite{
 
 
   val tests = TestSuite{
-    'escapeChar{
+    "escapeChar"-{
       def check(c: Char, expected: String) = {
 
         val escaped = pprint.Util.escapeChar(c, new StringBuilder).toString
@@ -20,7 +20,7 @@ object UnitTests extends TestSuite{
       check('\\', "\\\\")
       check('\t', "\\t")
     }
-    'literalize{
+    "literalize"-{
       val simple = pprint.Util.literalize("hi i am a cow")
       val simpleExpected = """ "hi i am a cow" """.trim
       assert(simple == simpleExpected)
@@ -29,7 +29,7 @@ object UnitTests extends TestSuite{
       val escapedExpected = """ "hi i am a \"cow\"" """.trim
       assert(escaped == escapedExpected)
     }
-    'concatIter{
+    "concatIter"-{
 
       var count = 0
       def check(iter: Iterator[Iterator[Int]],
@@ -42,7 +42,7 @@ object UnitTests extends TestSuite{
         val output = joined.toVector
         assert(output == expected)
       }
-      'multipleItems - check(
+      "multipleItems" - check(
         Iterator(
           Iterator(1, 2, 3),
           Iterator(4, 5, 6),
@@ -54,7 +54,7 @@ object UnitTests extends TestSuite{
         },
         Vector(1, 2, 3, -1, -2, 4, 5, 6, -2, -3, 7, 8, 9)
       )
-      'singleItem - check(
+      "singleItem" - check(
         Iterator(
           Iterator(1, 2, 3)
         ),
@@ -62,28 +62,28 @@ object UnitTests extends TestSuite{
         Vector(1, 2, 3)
       )
 
-      'empty - check(
+      "empty" - check(
         Iterator(),
         Iterator(9),
         Vector()
       )
-      'empty2 - check(
+      "empty2" - check(
         Iterator(Iterator()),
         Iterator(9),
         Vector()
       )
-      'joinedEmpties- check(
+      "joinedEmpties" - check(
         Iterator(Iterator(), Iterator()),
         Iterator(9),
         Vector(9)
       )
 
-      'halfEmpty- check(
+      "halfEmpty" - check(
         Iterator(Iterator(1), Iterator()),
         Iterator(9),
         Vector(1, 9)
       )
-      'halfEmpty2- check(
+      "halfEmpty2" - check(
         Iterator(Iterator(), Iterator(1, 2, 3)),
         Iterator(9),
         Vector(9, 1, 2, 3)

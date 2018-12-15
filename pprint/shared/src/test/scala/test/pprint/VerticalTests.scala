@@ -10,10 +10,10 @@ object VerticalTests extends TestSuite{
   val tests = TestSuite{
 
 
-    'Vertical{
+    "Vertical"-{
 
       val Check = new Check(width = 25, renderTwice = true)
-      'singleNested {
+      "singleNested" - {
         * - new Check(width = 5)(
           List(1, 2, 3),
           """List(
@@ -115,7 +115,7 @@ object VerticalTests extends TestSuite{
         )
 
       }
-      'doubleNested{
+      "doubleNested"-{
 
         * - Check(
           List(Seq("omg", "omg"), Seq("mgg", "mgg"), Seq("ggx", "ggx")),
@@ -195,12 +195,12 @@ object VerticalTests extends TestSuite{
         )
       }
     }
-    'traited {
+    "traited" - {
       val Check = new Check()
       Check(Nested.ODef.Foo(2, "ba"), "Foo(2, \"ba\")")
       Check(Nested.CDef.Foo(2, "ba"), "Foo(2, \"ba\")")
     }
-    'Color{
+    "Color" -{
       def count(haystack: Iterator[fansi.Str], needles: (String, Int)*) = {
         val str = haystack.map(_.render).mkString
         for ((needle, expected) <- needles){
@@ -229,8 +229,8 @@ object VerticalTests extends TestSuite{
       )
     }
 
-    'Truncation{
-      'longNoTruncation{
+    "Truncation"-{
+      "longNoTruncation"-{
         val Check = new Check()
         * - Check("a" * 10000,"\""+"a" * 10000+"\"")
         * - Check(
@@ -270,7 +270,7 @@ object VerticalTests extends TestSuite{
         )
       }
 
-      'shortNonTruncated{
+      "shortNonTruncated"-{
         val Check = new Check(height = 15)
         * - Check("a"*1000, "\"" + "a"*1000 + "\"")
         * - Check(List(1,2,3,4), "List(1, 2, 3, 4)")
@@ -295,7 +295,7 @@ object VerticalTests extends TestSuite{
         )
       }
 
-      'shortLinesTruncated{
+      "shortLinesTruncated"-{
         val Check = new Check(height = 15)
         * - Check(
           List.fill(15)("foobarbaz"),
@@ -335,7 +335,7 @@ object VerticalTests extends TestSuite{
         )
       }
 
-      'longLineTruncated{
+      "longLineTruncated"-{
         // These print out one long line, but at the width that the
         // pretty-printer is configured to, it (including any trailing ...)
         // wraps to fit within the desired width and height
@@ -370,7 +370,7 @@ object VerticalTests extends TestSuite{
         }
       }
 
-      'stream{
+      "stream"-{
         val Check = new Check(height = 5)
         Check(
           Stream.continually("foo"),
@@ -384,7 +384,7 @@ object VerticalTests extends TestSuite{
       }
     }
 
-    'wrappedLines{
+    "wrappedLines"-{
       val Check = new Check(width = 8, height = 5)
 
       Check(

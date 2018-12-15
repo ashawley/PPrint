@@ -11,7 +11,7 @@ object TPrintTests extends TestSuite{
     //
     type X = scala.Int with scala.Predef.String{}
     val x = ""
-    'plain{
+    "plain"-{
       def checkVal[T](expected: String, expr: => T)(implicit tprint: TPrint[T]) = {
         check[T](expected)(tprint)
       }
@@ -20,7 +20,7 @@ object TPrintTests extends TestSuite{
         val tprinted = tprint.render
         assert(tprinted == expected)
       }
-      'simple {
+      "simple" - {
         check[X]("X")
         check[String]("String")
         check[java.lang.String]("String")
@@ -31,7 +31,7 @@ object TPrintTests extends TestSuite{
         t
       }
 
-      'nothing{
+      "nothing"-{
         check[Nothing]("Nothing")
         // Inferred nothings behave weirdly, make sure it works!
         check("Nothing")
@@ -39,19 +39,19 @@ object TPrintTests extends TestSuite{
         checkVal("Some[Nothing]", Some(???))
       }
 
-      'singleton{
+      "singleton"-{
         check[x.type]("x.type")
         check[TPrintTests.this.M]("M")
         check[TPrintTests.type]("TPrintTests.type")
       }
 
-      'java {
+      "java" - {
         check[java.util.Set[_]]("java.util.Set[_]")
         check[java.util.Set[_ <: String]]("java.util.Set[_] forSome { type _ <: String }")
         check[java.util.Set[String]]("java.util.Set[String]")
       }
 
-      'mutable{
+      "mutable"-{
 
         check[collection.mutable.Buffer[Int]]("collection.mutable.Buffer[Int]")
         import collection.mutable
@@ -60,7 +60,7 @@ object TPrintTests extends TestSuite{
         check[collection.Seq[Int]]("Seq[Int]")
 
       }
-      'compound{
+      "compound"-{
         check[Map[Int, List[String]]]("Map[Int, List[String]]")
         check[Int => String]("Int => String")
         check[(Int, Float) => String]("(Int, Float) => String")
@@ -73,7 +73,7 @@ object TPrintTests extends TestSuite{
         check[Int {val x: Int}]("Int{val x: Int}")
         check[Int with String]("Int with String")
       }
-      'existential{
+      "existential"-{
         check[{type T = Int}]("{type T = Int}")
 
         check[Map[_, _]]("Map[_, _]")
@@ -114,7 +114,7 @@ object TPrintTests extends TestSuite{
       }
 
 
-      'typeMember{
+      "typeMember"-{
         class C{ type V; class U}
         check[C#V]("C#V")
         check[C#U]("C#U")
@@ -123,19 +123,19 @@ object TPrintTests extends TestSuite{
         }
         check[O.P]("O.P")
       }
-      'thisType {
+      "thisType" - {
         class T {
           check[T.this.type]("T.this.type")
         }
         new T()
       }
-      'annotated{
+      "annotated"-{
         // Can't use the normal implicit method, because of SI-8079
         assert(TPrint.default[M@deprecated].render == "M @deprecated")
       }
 
       class Custom
-      'custom{
+      "custom"-{
         // Maybe we want to add some extra decoration
         implicit def customTPrint: TPrint[Custom] = TPrint.lambda(cfg => "+++Custom+++")
         check[Custom]("+++Custom+++")
@@ -151,7 +151,7 @@ object TPrintTests extends TestSuite{
         check[Stream[Custom]]("+++Custom+++ Stream")
       }
 
-      'complex{
+      "complex"-{
         class A
         class B{
           class C
@@ -162,24 +162,24 @@ object TPrintTests extends TestSuite{
         check[(Custom with B)#C]("(+++Custom+++ with B)#C")
 
       }
-      'higherKinded{
+      "higherKinded"-{
         class C[T[_]]
         check[C[List]]("C[List]")
       }
-      'byName{
+      "byName"-{
         check[(=> Int) => Double]("Function1[=> Int, Double]")
         check[(=> Int, String, => (=> Char) => Float) => Double](
           "Function3[=> Int, String, => Function1[=> Char, Float], Double]"
         )
       }
-      'range{
+      "range"-{
         check[Range]("Range")
         checkVal("Range.Inclusive", 0 to 10)
         checkVal("Range", 0 until 10)
         check[Range.Inclusive]("Range.Inclusive")
       }
     }
-    'colored{
+    "colored"-{
       import pprint.TPrintColors.Colors._
       def checkColor[T](expected: String)(implicit tprint: TPrint[T]) = {
         val tprinted = tprint.render.replace(
